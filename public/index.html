@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MonsoonShield — Monsoon Preparedness & Citizen Assistance</title>
+    <meta name="description" content="AI-powered preparedness plans, weather-aware emergency guidance, localized checklists, travel advisories, and multilingual safety chat support.">
+    <!-- Google Fonts: Outfit and Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Top Header Navigation -->
+    <header class="app-header">
+        <div class="header-container">
+            <div class="logo-area" id="logo-home">
+                <span class="logo-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0072ff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="app-logo-svg"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/><path d="M8 19v2"/><path d="M12 17v4"/><path d="M16 19v2"/></svg>
+                </span>
+                <div class="logo-text-group">
+                    <h1 class="logo-text">Monsoon<span>Shield</span></h1>
+                    <span class="logo-subtext">Stay Prepared, Stay Safe</span>
+                </div>
+            </div>
+            
+            <nav class="top-nav">
+                <a href="#section-hero" class="nav-link active">Home</a>
+                <a href="#section-tabs" class="nav-link" data-target="tab-plan">Preparedness Plan</a>
+                <a href="#section-tabs" class="nav-link" data-target="tab-checklist">Checklists</a>
+                <a href="#section-tabs" class="nav-link" data-target="tab-travel">Travel Advisory</a>
+                <a href="#section-tabs" class="nav-link" data-target="tab-chat">AI Assistant</a>
+            </nav>
+
+            <div class="header-right">
+                <div class="lang-selector-wrapper">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="globe-icon"><circle cx="12" cy="12" r="10"/><line x1="2" x2="22" y1="12" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                    <select id="sel-language" class="header-lang-select">
+                        <option value="English">English</option>
+                        <option value="Hindi">हिन्दी (Hindi)</option>
+                        <option value="Marathi">मराठी (Marathi)</option>
+                        <option value="Bengali">বাংলা (Bengali)</option>
+                        <option value="Tamil">தமிழ் (Tamil)</option>
+                        <option value="Telugu">తెలుగు (Telugu)</option>
+                    </select>
+                </div>
+                <div class="profile-avatar">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="app-main-layout">
+        <!-- Hero Section -->
+        <section id="section-hero" class="hero-section">
+            <div class="hero-grid">
+                <!-- Left: Headline & AI Bar -->
+                <div class="hero-intro">
+                    <h2 class="hero-title">Be Prepared.<br>Stay Safe. Together.</h2>
+                    <p class="hero-subtitle">AI-powered guidance and real-time alerts to help you and your loved ones stay safe before, during, and after monsoon.</p>
+                    
+                    <form id="form-hero-ask" class="quick-ask-bar">
+                        <span class="sparkle-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275Z"/></svg>
+                        </span>
+                        <input type="text" id="txt-hero-question" placeholder="Ask anything... e.g. How can I protect my home from flooding?" required>
+                        <button type="submit" class="btn-ask-ai">Ask AI</button>
+                    </form>
+                </div>
+
+                <!-- Middle: Weather Live Status Card -->
+                <div class="weather-card">
+                    <header class="weather-card-header">
+                        <div class="city-selector-block">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                            <input type="text" id="txt-city-search" value="Pune" placeholder="Enter city name...">
+                        </div>
+                        <span id="lbl-weather-updated" class="weather-update-time">Loading weather data...</span>
+                    </header>
+                    <div class="weather-main-info">
+                        <div class="weather-condition-icon" id="weather-icon-container">
+                            <span class="spinner" style="border-top-color: var(--primary); width: 32px; height: 32px; border-width: 3px;"></span>
+                        </div>
+                        <div class="weather-temp-block">
+                            <span id="lbl-weather-temp" class="weather-temp-num">--°C</span>
+                            <div class="weather-condition-meta">
+                                <span id="lbl-weather-condition" class="weather-desc">Connecting...</span>
+                                <span id="lbl-weather-feels" class="weather-feels">Please wait</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="weather-sub-metrics">
+                        <div class="metric">
+                            <span class="label">Humidity</span>
+                            <span id="lbl-weather-humidity" class="value">--</span>
+                        </div>
+                        <div class="metric">
+                            <span class="label">Wind</span>
+                            <span id="lbl-weather-wind" class="value">--</span>
+                        </div>
+                        <div class="metric">
+                            <span class="label">Precipitation</span>
+                            <span id="lbl-weather-precipitation" class="value">--</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Alert Card -->
+                <div class="alert-status-card glass" id="weather-alert-card">
+                    <header class="alert-header">
+                        <svg class="alert-icon-svg" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" x2="12" y1="9" y2="13"/><line x1="12" x2="12" y1="17" y2="17.01"/></svg>
+                        <span>Weather Alert</span>
+                    </header>
+                    <div class="alert-body">
+                        <h4 id="lbl-alert-headline" class="alert-title">Checking active weather alerts...</h4>
+                        <p id="lbl-alert-body" class="alert-desc">Retrieving advisory reports for your region.</p>
+                    </div>
+                    <button id="btn-view-alert" class="btn-alert-link" disabled>Loading...</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Citizen Profiler Drawer/Section -->
+        <section class="profiler-banner card">
+            <div class="profiler-container">
+                <header class="profiler-header">
+                    <h3>Personalize Your Guidance Plan</h3>
+                    <p>Enter your family size, building structure, and vulnerability factors to calibrate safety recommendations.</p>
+                </header>
+                <form id="form-profiler" class="profiler-horizontal-form">
+                    <div class="input-item">
+                        <label for="sel-house-type">Household Structure</label>
+                        <select id="sel-house-type">
+                            <option value="Ground Floor / Low-Lying Area">Ground Floor / Low-Lying Area (High Flood Risk)</option>
+                            <option value="Apartment - Middle Floor">Apartment - Middle Floor</option>
+                            <option value="Apartment - Top Floor / Penthouse">Apartment - Top Floor / Penthouse</option>
+                            <option value="Independent Villa">Independent Villa</option>
+                            <option value="Temporary Hutment">Temporary Hutment (Extreme Vulnerability)</option>
+                        </select>
+                    </div>
+                    <div class="input-item small">
+                        <label for="num-family-size">Family Size</label>
+                        <input type="number" id="num-family-size" min="1" max="20" value="4">
+                    </div>
+                    <div class="input-item">
+                        <label>Vulnerabilities / Special Care Needs</label>
+                        <div class="horizontal-checkboxes">
+                            <label class="check-box-pill">
+                                <input type="checkbox" name="vulnerabilities" value="Elderly members">
+                                <span>Elderly members</span>
+                            </label>
+                            <label class="check-box-pill">
+                                <input type="checkbox" name="vulnerabilities" value="Infants / Kids">
+                                <span>Infants / Kids</span>
+                            </label>
+                            <label class="check-box-pill">
+                                <input type="checkbox" name="vulnerabilities" value="Outdoor pets">
+                                <span>Outdoor Pets</span>
+                            </label>
+                            <label class="check-box-pill">
+                                <input type="checkbox" name="vulnerabilities" value="Medical dependence">
+                                <span>Medical Support</span>
+                            </label>
+                        </div>
+                    </div>
+                    <button type="submit" id="btn-recalibrate" class="btn-recalibrate-plan">
+                        <span class="btn-text">Recalibrate Plan</span>
+                        <span class="spinner hidden"></span>
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Quick Navigation Action Cards -->
+        <section class="quick-nav-cards">
+            <button class="nav-card active" data-tab="tab-plan">
+                <span class="nav-card-icon card-blue">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                </span>
+                <div class="nav-card-text">
+                    <h4>Preparedness Plan</h4>
+                    <p>Get a personalized plan for your location.</p>
+                </div>
+                <span class="arrow">→</span>
+            </button>
+            <button class="nav-card" data-tab="tab-checklist">
+                <span class="nav-card-icon card-orange">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 12 2 2 4-4"/></svg>
+                </span>
+                <div class="nav-card-text">
+                    <h4>Emergency Checklist</h4>
+                    <p>Essential items and steps to stay ready.</p>
+                </div>
+                <span class="arrow">→</span>
+            </button>
+            <button class="nav-card" data-tab="tab-travel">
+                <span class="nav-card-icon card-purple">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="22" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                </span>
+                <div class="nav-card-text">
+                    <h4>Travel Advisory</h4>
+                    <p>Check safe routes and travel updates.</p>
+                </div>
+                <span class="arrow">→</span>
+            </button>
+            <button class="nav-card" data-tab="tab-resources">
+                <span class="nav-card-icon card-teal">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                </span>
+                <div class="nav-card-text">
+                    <h4>Safety Guidelines</h4>
+                    <p>Important tips for you and your family.</p>
+                </div>
+                <span class="arrow">→</span>
+            </button>
+            <button class="nav-card" data-tab="tab-chat">
+                <span class="nav-card-icon card-green">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                </span>
+                <div class="nav-card-text">
+                    <h4>AI Assistant</h4>
+                    <p>Get instant answers in your language.</p>
+                </div>
+                <span class="arrow">→</span>
+            </button>
+        </section>
+
+        <!-- Dashboard Workspace Sections -->
+        <section id="section-tabs" class="tab-workspace-container">
+            
+            <!-- Tab 1: Preparedness Plan -->
+            <div id="tab-plan" class="tab-content active">
+                <div class="plan-timeline-grid">
+                    <!-- Dynamic rendering of timeline stages (Before, During, After) -->
+                </div>
+            </div>
+
+            <!-- Tab 2: Checklist -->
+            <div id="tab-checklist" class="tab-content">
+                <div class="checklist-tab-grid">
+                    <div class="checklist-tab-header">
+                        <h3>Household Emergency Kit</h3>
+                        <div class="checklist-progress">
+                            <span id="lbl-kit-progress-text">3/6 Completed</span>
+                            <div class="checklist-progress-bar-wrapper">
+                                <div id="kit-progress-bar" class="checklist-progress-bar"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="lst-kit-categories" class="kit-grid-list">
+                        <!-- Checklist items categories -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 3: Travel Advisory -->
+            <div id="tab-travel" class="tab-content">
+                <div class="travel-tab-wrapper card">
+                    <div class="travel-alert-box" id="card-travel-advisory-box">
+                        <span class="travel-status-label" id="lbl-travel-advisory-status">Safe to Travel</span>
+                        <p class="travel-status-desc" id="lbl-travel-commute-recommendation">Weather suggests roads are clear. Plan routes ahead.</p>
+                    </div>
+                    
+                    <div class="travel-tips-container">
+                        <h3>Commuter Safety Guidelines</h3>
+                        <ul id="lst-travel-tips-list" class="travel-tips-list"></ul>
+                    </div>
+
+                    <div class="emergency-helplines-container">
+                        <h3>Emergency Control Centers Helpline</h3>
+                        <div class="contacts-grid" id="lst-travel-contacts">
+                            <!-- Helpline items -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 4: Safety Guidelines / Resources -->
+            <div id="tab-resources" class="tab-content">
+                <div class="resources-tab-grid">
+                    <div class="resource-card card">
+                        <h4>Home Protection Hacks</h4>
+                        <ul id="lst-resource-home" class="resource-list"></ul>
+                    </div>
+                    <div class="resource-card card">
+                        <h4>Health & Infection Prevention Guidelines</h4>
+                        <ul id="lst-resource-health" class="resource-list"></ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 5: AI Assistant Chat -->
+            <div id="tab-chat" class="tab-content">
+                <div class="chat-workspace-card card">
+                    <header class="chat-header">
+                        <div class="chat-title-info">
+                            <div class="status-circle"></div>
+                            <h3>Monsoon Assistant Chat</h3>
+                        </div>
+                        <span id="lbl-chat-language-badge" class="chat-lang-badge">Responding in English</span>
+                    </header>
+                    <div id="chat-messages" class="chat-messages-container">
+                        <!-- Messages go here -->
+                    </div>
+                    <form id="form-chat-submit" class="chat-input-row">
+                        <input type="text" id="txt-chat-query" placeholder="Ask the Monsoon Assistant anything..." required autocomplete="off">
+                        <button type="submit" class="btn-chat-send-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" x2="11" y1="2" y2="13"/><polyline points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- Initial Placeholder State (shown until first plan generated) -->
+        <section id="results-placeholder" class="placeholder-section hidden">
+            <!-- Hidden as default because Pune loads on start, ensuring instant premium experience! -->
+        </section>
+
+        <!-- Today's Preparedness & Notifications Dashboard (UX Layout) -->
+        <section class="dashboard-secondary-grid">
+            <!-- Left Checklist -->
+            <div class="card preparedness-card">
+                <div class="card-header-row">
+                    <h3>Today's Preparedness</h3>
+                    <span id="lbl-dashboard-prep-status" class="status-counter">3/6 Completed</span>
+                </div>
+                <div class="checklist-split-layout">
+                    <div class="checklist-items-column" id="lst-dashboard-quick-prep">
+                        <label class="check-item-row">
+                            <input type="checkbox" checked>
+                            <span class="check-label-text">
+                                <strong>Check weather updates</strong>
+                                <small>Stay informed about local forecasts</small>
+                            </span>
+                        </label>
+                        <label class="check-item-row">
+                            <input type="checkbox" checked>
+                            <span class="check-label-text">
+                                <strong>Prepare emergency kit</strong>
+                                <small>Keep essential items ready</small>
+                            </span>
+                        </label>
+                        <label class="check-item-row">
+                            <input type="checkbox" checked>
+                            <span class="check-label-text">
+                                <strong>Secure documents</strong>
+                                <small>Store important documents safely</small>
+                            </span>
+                        </label>
+                        <label class="check-item-row">
+                            <input type="checkbox">
+                            <span class="check-label-text">
+                                <strong>Inspect home</strong>
+                                <small>Check windows, doors & drainage</small>
+                            </span>
+                        </label>
+                        <label class="check-item-row">
+                            <input type="checkbox">
+                            <span class="check-label-text">
+                                <strong>Clear drains & gutters</strong>
+                                <small>Prevent water logging</small>
+                            </span>
+                        </label>
+                        <label class="check-item-row">
+                            <input type="checkbox">
+                            <span class="check-label-text">
+                                <strong>Plan your travel</strong>
+                                <small>Avoid heavy rain routes</small>
+                            </span>
+                        </label>
+                    </div>
+                    <div class="checklist-illustration-column">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 150" class="prep-svg-illustration">
+                            <defs>
+                                <linearGradient id="umbrella-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" stop-color="#0052D4"/>
+                                    <stop offset="50%" stop-color="#4364F7"/>
+                                    <stop offset="100%" stop-color="#6FB1FC"/>
+                                </linearGradient>
+                            </defs>
+                            <!-- House -->
+                            <rect x="20" y="70" width="50" height="50" fill="#E2E8F0" rx="3"/>
+                            <polygon points="15,70 45,40 75,70" fill="#3A539B"/>
+                            <rect x="35" y="90" width="15" height="30" fill="#7E57C2"/>
+                            <!-- Rain drops -->
+                            <line x1="20" y1="10" x2="10" y2="30" stroke="#0072ff" stroke-width="2" stroke-linecap="round" opacity="0.3"/>
+                            <line x1="60" y1="15" x2="50" y2="35" stroke="#0072ff" stroke-width="2" stroke-linecap="round" opacity="0.3"/>
+                            <line x1="120" y1="10" x2="110" y2="30" stroke="#0072ff" stroke-width="2" stroke-linecap="round" opacity="0.3"/>
+                            <line x1="170" y1="15" x2="160" y2="35" stroke="#0072ff" stroke-width="2" stroke-linecap="round" opacity="0.3"/>
+                            <!-- Characters with Umbrella -->
+                            <circle cx="120" cy="85" r="10" fill="#FEE2E2"/>
+                            <rect x="110" y="95" width="20" height="35" fill="#3B82F6" rx="5"/>
+                            <circle cx="140" cy="90" r="9" fill="#FEE2E2"/>
+                            <rect x="131" y="99" width="18" height="31" fill="#10B981" rx="5"/>
+                            <!-- Umbrella -->
+                            <path d="M90 70 C90 30, 170 30, 170 70 Z" fill="url(#umbrella-grad)"/>
+                            <line x1="130" y1="70" x2="130" y2="105" stroke="#374151" stroke-width="3"/>
+                            <path d="M130 105 A5 5 0 0 1 125 110" fill="none" stroke="#374151" stroke-width="3"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Middle alerts column -->
+            <div class="card alerts-card">
+                <div class="card-header-row">
+                    <h3>Recent Alerts</h3>
+                    <a href="#section-tabs" id="lnk-view-all-alerts" class="lnk-more">View all →</a>
+                </div>
+                <div class="alerts-list-wrapper" id="lst-dashboard-alerts">
+                    <div class="alert-item red-alert">
+                        <span class="icon">⚠️</span>
+                        <div class="text">
+                            <strong>Heavy rainfall expected in Pune district</strong>
+                            <small>10:15 AM - IMD</small>
+                        </div>
+                    </div>
+                    <div class="alert-item yellow-alert">
+                        <span class="icon">🔄</span>
+                        <div class="text">
+                            <strong>Water logging reported in Hinjewadi area</strong>
+                            <small>Yesterday - Pune Municipal Corporation</small>
+                        </div>
+                    </div>
+                    <div class="alert-item green-alert">
+                        <span class="icon">✅</span>
+                        <div class="text">
+                            <strong>Safe to travel on Mumbai-Pune Expressway</strong>
+                            <small>2 days ago - Traffic Police</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right notifications toggle card -->
+            <div class="card notification-card">
+                <div class="bell-icon-wrapper">
+                    <span class="badge">1</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#0072ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="bell-icon-svg"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+                </div>
+                <h3>Stay Informed</h3>
+                <p>Enable notifications to receive real-time weather alerts and emergency travel advisories instantly.</p>
+                <button id="btn-toggle-notifications" class="btn-enable-notifications">Enable Notifications</button>
+            </div>
+        </section>
+
+        <!-- Monsoon Tip Banner -->
+        <section class="monsoon-tip-banner" id="banner-monsoon-tip">
+            <div class="tip-content">
+                <span class="tip-badge">💡 Monsoon Tip</span>
+                <p class="tip-text">Keep a bag ready with essentials, medicines, and important documents in a waterproof pouch.</p>
+            </div>
+            <button id="btn-close-tip" class="btn-close-tip-banner">&times;</button>
+        </section>
+    </main>
+
+    <!-- Bottom Helpline Row Footer -->
+    <footer class="app-footer-helplines">
+        <div class="footer-helpline-container">
+            <div class="helpline-block main-helpline">
+                <span class="title">Emergency Helpline</span>
+                <a href="tel:112" class="btn-call-emergency">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="phone-svg"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                    Call 112
+                </a>
+                <span class="info-label">In case of emergency, seek immediate help.</span>
+            </div>
+            <div class="helpline-block">
+                <span class="title">NDRF Helpline</span>
+                <span class="number">1078</span>
+            </div>
+            <div class="helpline-block">
+                <span class="title">Disaster Management</span>
+                <span class="number">108</span>
+            </div>
+            <div class="helpline-block">
+                <span class="title">Child Helpline</span>
+                <span class="number">1098</span>
+            </div>
+        </div>
+        <p class="copyright-row">&copy; 2026 MonsoonShield. Created for Monsoon Preparedness & Citizen Assistance.</p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
