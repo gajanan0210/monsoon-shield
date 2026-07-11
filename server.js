@@ -27,7 +27,10 @@ app.get('/api/weather', async (req, res) => {
 
     // Geocoding API: City to Lat/Lon
     const geoUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=en&format=json`;
-    const geoRes = await fetch(geoUrl);
+    const geoController = new AbortController();
+    const geoTimeout = setTimeout(() => geoController.abort(), 10000);
+    const geoRes = await fetch(geoUrl, { signal: geoController.signal });
+    clearTimeout(geoTimeout);
     if (!geoRes.ok) {
       throw new Error('Geocoding service unavailable.');
     }
@@ -40,7 +43,10 @@ app.get('/api/weather', async (req, res) => {
 
     // Forecast API: Get current and daily rain forecast
     const forecastUrl = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,rain,weather_code,wind_speed_10m&daily=precipitation_sum,rain_sum&timezone=auto`;
-    const forecastRes = await fetch(forecastUrl);
+    const forecastController = new AbortController();
+    const forecastTimeout = setTimeout(() => forecastController.abort(), 10000);
+    const forecastRes = await fetch(forecastUrl, { signal: forecastController.signal });
+    clearTimeout(forecastTimeout);
     if (!forecastRes.ok) {
       throw new Error('Weather forecast service unavailable.');
     }
