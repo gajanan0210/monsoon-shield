@@ -679,6 +679,20 @@ function getTravelColor(status) {
         document.getElementById('section-tabs').scrollIntoView({ behavior: 'smooth' });
     });
 
+    // Automatically recalibrate plan and update UI language when dropdown changes
+    selLanguage.addEventListener('change', () => {
+        const selectedLang = selLanguage.value;
+        showToast(`Language switched to ${selectedLang}`, 'success');
+        
+        // Update chatbot header status badge
+        lblChatLanguageBadge.textContent = `Responding in ${selectedLang}`;
+        
+        // Automatically submit the form to re-generate safety plan in the new language
+        if (currentWeather) {
+            formProfiler.dispatchEvent(new Event('submit'));
+        }
+    });
+
     // --- Secondary Grid & Interactions ---
     // Handle Today's Preparedness ticks
     const dashboardCheckboxes = document.querySelectorAll('#lst-dashboard-quick-prep input[type="checkbox"]');
