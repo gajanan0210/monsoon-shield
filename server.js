@@ -126,13 +126,20 @@ async function callGemini(contents, isJson = false) {
     process.env.GEMINI_API_KEY
   ].filter(Boolean); // removes undefined/empty env keys
 
+  console.log('--- callGemini diagnostic ---');
+  console.log('Total API keys detected:', apiKeys.length);
+  apiKeys.forEach((k, i) => {
+    console.log(`Key ${i + 1}: ${k.slice(0, 6)}...${k.slice(-4)}`);
+  });
+
   const models = ['gemini-2.5-flash', 'gemini-2.5-pro', 'gemini-1.5-flash', 'gemini-1.5-pro'];
   let lastError = null;
 
   for (const apiKey of apiKeys) {
+    const maskedKey = `${apiKey.slice(0, 6)}...${apiKey.slice(-4)}`;
     for (const model of models) {
       const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
-      console.log(`Attempting content generation using model: ${model} with key starting with: ${apiKey.slice(0, 6)}...`);
+      console.log(`Attempting model: ${model} with key ${maskedKey}...`);
       try {
         const response = await axios.post(
           geminiUrl,
