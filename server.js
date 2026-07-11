@@ -115,8 +115,7 @@ async function callGemini(contents, isJson = false) {
             generationConfig: isJson ? { responseMimeType: 'application/json' } : undefined
           },
           {
-            httpsAgent: ipv4HttpsAgent,
-            timeout: 15000 // 15 seconds timeout
+            timeout: 20000 // 20 seconds timeout without forcing IPv4 agent for Google global edge network
           }
         );
 
