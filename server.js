@@ -1,10 +1,15 @@
 const dns = require('dns');
+const https = require('https');
 dns.setDefaultResultOrder('ipv4first');
+
+// Force IPv4 at socket level for all outbound weather API requests
+const ipv4HttpsAgent = new https.Agent({ family: 4 });
 
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const path = require('path');
+const axios = require('axios');
 
 // Load environment variables
 dotenv.config();
@@ -27,14 +32,8 @@ app.get('/api/weather', async (req, res) => {
 
     // Geocoding API: City to Lat/Lon
     const geoUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=en&format=json`;
-    const geoController = new AbortController();
-    const geoTimeout = setTimeout(() => geoController.abort(), 10000);
-    const geoRes = await fetch(geoUrl, { signal: geoController.signal });
-    clearTimeout(geoTimeout);
-    if (!geoRes.ok) {
-      throw new Error('Geocoding service unavailable.');
-    }
-    const geoData = await geoRes.json();
+    const geoResponse = await axios.get(geoUrl, { httpsAgent: ipv4HttpsAgent, timeout: 10000 });
+    const geoData = geoResponse.data;
     if (!geoData.results || geoData.results.length === 0) {
       return res.status(404).json({ error: `City "${city}" not found.` });
     }
@@ -43,14 +42,8 @@ app.get('/api/weather', async (req, res) => {
 
     // Forecast API: Get current and daily rain forecast
     const forecastUrl = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,rain,weather_code,wind_speed_10m&daily=precipitation_sum,rain_sum&timezone=auto`;
-    const forecastController = new AbortController();
-    const forecastTimeout = setTimeout(() => forecastController.abort(), 10000);
-    const forecastRes = await fetch(forecastUrl, { signal: forecastController.signal });
-    clearTimeout(forecastTimeout);
-    if (!forecastRes.ok) {
-      throw new Error('Weather forecast service unavailable.');
-    }
-    const forecastData = await forecastRes.json();
+    const forecastResponse = await axios.get(forecastUrl, { httpsAgent: ipv4HttpsAgent, timeout: 10000 });
+    const forecastData = forecastResponse.data;
 
     const result = {
       cityName: name,
