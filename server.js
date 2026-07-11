@@ -100,7 +100,7 @@ async function callGemini(contents, isJson = false) {
     process.env.GEMINI_API_KEY
   ].filter(Boolean); // removes undefined/empty env keys
 
-  const models = ['gemini-3.5-flash', 'gemini-1.5-flash'];
+  const models = ['gemini-2.5-flash', 'gemini-2.5-pro', 'gemini-1.5-flash', 'gemini-1.5-pro'];
   let lastError = null;
 
   for (const apiKey of apiKeys) {

@@ -1,4 +1,38 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Premium Toast Notification Helper
+    function showToast(message, type = 'error') {
+        let container = document.querySelector('.toast-container');
+        if (!container) {
+            container = document.createElement('div');
+            container.className = 'toast-container';
+            document.body.appendChild(container);
+        }
+
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        
+        let icon = '❌';
+        if (type === 'success') icon = '✅';
+        if (type === 'warning') icon = '⚠️';
+
+        toast.innerHTML = `
+            <span>${icon}</span>
+            <div style="flex: 1;">${message}</div>
+        `;
+        
+        container.appendChild(toast);
+        
+        // Trigger reflow to apply transition
+        toast.offsetHeight;
+        toast.classList.add('show');
+
+        // Auto remove after 5 seconds
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => toast.remove(), 300);
+        }, 5000);
+    }
+
     // State Variables
     let currentWeather = null;
     let currentCity = 'Pune';
@@ -316,7 +350,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } catch (error) {
             console.error('Calibration error:', error);
-            alert(`Error: ${error.message}`);
+            showToast(`Error: ${error.message}`);
         } finally {
             btnRecalibrate.disabled = false;
             btnRecalibrateText.textContent = 'Recalibrate Plan';
@@ -669,7 +703,7 @@ function getTravelColor(status) {
         if (btnToggleNotifications.textContent.includes('Enable')) {
             btnToggleNotifications.textContent = 'Notifications Enabled';
             btnToggleNotifications.style.background = 'var(--success)';
-            alert('Notifications enabled! You will now receive instant warnings and travel updates.');
+            showToast('Notifications enabled! You will now receive instant warnings and travel updates.');
         } else {
             btnToggleNotifications.textContent = 'Enable Notifications';
             btnToggleNotifications.style.background = 'var(--primary)';
