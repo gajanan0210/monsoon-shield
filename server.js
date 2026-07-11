@@ -22,7 +22,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// 1. Weather API Proxy Endpoint (using free Open-Meteo APIs)
+// 1. Weather API Proxy Endpoint (using wttr.in - works on all cloud platforms)
 app.get('/api/weather', async (req, res) => {
   try {
     const { city } = req.query;
@@ -30,41 +30,62 @@ app.get('/api/weather', async (req, res) => {
       return res.status(400).json({ error: 'City parameter is required.' });
     }
 
-    // Geocoding API: City to Lat/Lon
-    const geoUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=en&format=json`;
-    const geoResponse = await axios.get(geoUrl, { httpsAgent: ipv4HttpsAgent, timeout: 10000 });
-    const geoData = geoResponse.data;
-    if (!geoData.results || geoData.results.length === 0) {
-      return res.status(404).json({ error: `City "${city}" not found.` });
+    // wttr.in returns full weather data in one call - no geocoding needed
+    const wttrUrl = `https://wttr.in/${encodeURIComponent(city)}?format=j1`;
+    const wttrResponse = await axios.get(wttrUrl, {
+      httpsAgent: ipv4HttpsAgent,
+      timeout: 12000,
+      headers: { 'User-Agent': 'MonsoonShield/1.0 (monsoon-safety-app)' }
+    });
+    const wttrData = wttrResponse.data;
+
+    const current = wttrData.current_condition?.[0];
+    const nearest = wttrData.nearest_area?.[0];
+    const today = wttrData.weather?.[0];
+
+    if (!current || !nearest) {
+      return res.status(404).json({ error: `City "${city}" not found or weather data unavailable.` });
     }
 
-    const { latitude, longitude, name, country, admin1 } = geoData.results[0];
+    const cityName = nearest.areaName?.[0]?.value || city;
+    const region = nearest.region?.[0]?.value || '';
+    const country = nearest.country?.[0]?.value || '';
+    const precipMM = parseFloat(current.precipMM || 0);
+    const windSpeedKmph = parseFloat(current.windspeedKmph || 0);
+    const tempC = parseFloat(current.temp_C || 0);
+    const feelsLikeC = parseFloat(current.FeelsLikeC || 0);
+    const humidity = parseFloat(current.humidity || 0);
+    const weatherCode = parseInt(current.weatherCode || 113);
 
-    // Forecast API: Get current and daily rain forecast
-    const forecastUrl = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,rain,weather_code,wind_speed_10m&daily=precipitation_sum,rain_sum&timezone=auto`;
-    const forecastResponse = await axios.get(forecastUrl, { httpsAgent: ipv4HttpsAgent, timeout: 10000 });
-    const forecastData = forecastResponse.data;
+    // Map wttr.in rain weather codes to determine rain
+    const rainCodes = [293,296,299,302,305,308,311,314,353,356,359,362,365,374,377];
+    const isRaining = rainCodes.includes(weatherCode);
+    const rainMm = isRaining ? precipMM : 0;
+
+    // Today's total precipitation
+    const dailyRain = parseFloat(today?.hourly?.reduce((sum, h) => sum + parseFloat(h.precipMM || 0), 0) || 0);
 
     const result = {
-      cityName: name,
-      region: admin1 || '',
-      country: country || '',
-      coords: { lat: latitude, lon: longitude },
+      cityName,
+      region,
+      country,
+      coords: { lat: parseFloat(nearest.latitude || 0), lon: parseFloat(nearest.longitude || 0) },
       current: {
-        temp: forecastData.current.temperature_2m,
-        feelsLike: forecastData.current.apparent_temperature,
-        humidity: forecastData.current.relative_humidity_2m,
-        precipitation: forecastData.current.precipitation,
-        rain: forecastData.current.rain,
-        windSpeed: forecastData.current.wind_speed_10m,
-        weatherCode: forecastData.current.weather_code
+        temp: tempC,
+        feelsLike: feelsLikeC,
+        humidity,
+        precipitation: precipMM,
+        rain: rainMm,
+        windSpeed: windSpeedKmph,
+        weatherCode,
+        weatherDesc: current.weatherDesc?.[0]?.value || 'Unknown'
       },
-      dailyRain: forecastData.daily?.rain_sum?.[0] || 0
+      dailyRain
     };
 
     res.json(result);
   } catch (error) {
-    console.error('Weather fetching error:', error);
+    console.error('Weather fetching error:', error.message);
     res.status(500).json({ error: error.message || 'Failed to fetch weather data.' });
   }
 });
