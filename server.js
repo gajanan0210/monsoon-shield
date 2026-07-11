@@ -108,31 +108,33 @@ async function callGemini(contents, isJson = false) {
       const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
       console.log(`Attempting content generation using model: ${model} with key starting with: ${apiKey.slice(0, 6)}...`);
       try {
-        const response = await fetch(geminiUrl, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
+        const response = await axios.post(
+          geminiUrl,
+          {
             contents,
             generationConfig: isJson ? { responseMimeType: 'application/json' } : undefined
-          })
-        });
+          },
+          {
+            httpsAgent: ipv4HttpsAgent,
+            timeout: 15000 // 15 seconds timeout
+          }
+        );
 
-        if (response.ok) {
-          const data = await response.json();
-          const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (response.status === 200) {
+          const text = response.data.candidates?.[0]?.content?.parts?.[0]?.text;
           if (text) {
             console.log(`Successfully generated content using model: ${model}`);
             return text;
           }
         } else {
-          const errText = await response.text();
-          lastError = `Model ${model} failed with status ${response.status}: ${errText}`;
+          lastError = `Model ${model} failed with status ${response.status}: ${JSON.stringify(response.data)}`;
           console.warn(`Key starting ${apiKey.slice(0, 6)}: ${lastError}`);
         }
       } catch (e) {
         lastError = `Model ${model} fetch error: ${e.message}`;
+        if (e.response && e.response.data) {
+          lastError += ` - ${JSON.stringify(e.response.data)}`;
+        }
         console.warn(`Key starting ${apiKey.slice(0, 6)}: ${lastError}`);
       }
     }
