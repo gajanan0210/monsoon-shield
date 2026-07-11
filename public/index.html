@@ -36,7 +36,7 @@
             <div class="header-right">
                 <div class="lang-selector-wrapper">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="globe-icon"><circle cx="12" cy="12" r="10"/><line x1="2" x2="22" y1="12" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-                    <select id="sel-language" class="header-lang-select">
+                    <select id="sel-language" class="header-lang-select" aria-label="Select interface language">
                         <option value="English">English</option>
                         <option value="Hindi">हिन्दी (Hindi)</option>
                         <option value="Marathi">मराठी (Marathi)</option>
@@ -66,7 +66,7 @@
                         <span class="sparkle-icon">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275Z"/></svg>
                         </span>
-                        <input type="text" id="txt-hero-question" placeholder="Ask anything... e.g. How can I protect my home from flooding?" required>
+                        <input type="text" id="txt-hero-question" placeholder="Ask anything... e.g. How can I protect my home from flooding?" required aria-label="Ask AI assistant about monsoon preparedness">
                         <button type="submit" class="btn-ask-ai">Ask AI</button>
                     </form>
                 </div>
@@ -76,7 +76,7 @@
                     <header class="weather-card-header">
                         <div class="city-selector-block">
                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
-                            <input type="text" id="txt-city-search" value="Pune" placeholder="Enter city name...">
+                            <input type="text" id="txt-city-search" value="Pune" placeholder="Enter city name..." aria-label="Enter city name to check live weather and alerts">
                         </div>
                         <span id="lbl-weather-updated" class="weather-update-time">Loading weather data...</span>
                     </header>
@@ -306,7 +306,7 @@
                         <!-- Messages go here -->
                     </div>
                     <form id="form-chat-submit" class="chat-input-row">
-                        <input type="text" id="txt-chat-query" placeholder="Ask the Monsoon Assistant anything..." required autocomplete="off">
+                        <input type="text" id="txt-chat-query" placeholder="Ask the Monsoon Assistant anything..." required autocomplete="off" aria-label="Enter your message for the AI assistant">
                         <button type="submit" class="btn-chat-send-btn">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" x2="11" y1="2" y2="13"/><polyline points="22 2 15 22 11 13 2 9 22 2"/></svg>
                         </button>

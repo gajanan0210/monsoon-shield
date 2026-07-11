@@ -5,7 +5,14 @@ dns.setDefaultResultOrder('ipv4first');
 // Force IPv4 at socket level for all outbound weather API requests
 const ipv4HttpsAgent = new https.Agent({ family: 4 });
 
+const helmet = require('helmet');
 const express = require('express');
+
+// Input sanitization helper to prevent XSS
+function sanitizeInput(str) {
+  if (typeof str !== 'string') return '';
+  return str.replace(/<[^>]*>/g, '').trim();
+}
 const cors = require('cors');
 const dotenv = require('dotenv');
 const path = require('path');
@@ -18,16 +25,29 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware
+app.use(helmet({ contentSecurityPolicy: false }));
 app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// In-memory weather cache (5 minutes TTL) to boost API performance and reliability
+const weatherCache = {};
+const CACHE_TTL_MS = 5 * 60 * 1000;
+
 // 1. Weather API Proxy Endpoint (using wttr.in - works on all cloud platforms)
 app.get('/api/weather', async (req, res) => {
   try {
-    const { city } = req.query;
+    let { city } = req.query;
     if (!city) {
       return res.status(400).json({ error: 'City parameter is required.' });
+    }
+    city = sanitizeInput(city);
+
+    const cacheKey = city.trim().toLowerCase();
+    const cachedItem = weatherCache[cacheKey];
+    if (cachedItem && (Date.now() - cachedItem.timestamp < CACHE_TTL_MS)) {
+      console.log(`Serving cached weather data for: ${city}`);
+      return res.json(cachedItem.data);
     }
 
     // wttr.in returns full weather data in one call - no geocoding needed
@@ -81,6 +101,12 @@ app.get('/api/weather', async (req, res) => {
         weatherDesc: current.weatherDesc?.[0]?.value || 'Unknown'
       },
       dailyRain
+    };
+
+    // Cache result
+    weatherCache[cacheKey] = {
+      timestamp: Date.now(),
+      data: result
     };
 
     res.json(result);
@@ -143,7 +169,11 @@ async function callGemini(contents, isJson = false) {
 
 app.post('/api/generate-plan', async (req, res) => {
   try {
-    const { city, weather, houseType, familySize, vulnerableFactors, language } = req.body;
+    let { city, weather, houseType, familySize, vulnerableFactors, language } = req.body;
+    city = sanitizeInput(city);
+    houseType = sanitizeInput(houseType);
+    vulnerableFactors = sanitizeInput(vulnerableFactors);
+    language = sanitizeInput(language);
 
     const hasApiKey = process.env.GEMINI_API_KEY_PRIMARY || process.env.GEMINI_API_KEY_SECONDARY || process.env.GEMINI_API_KEY;
     if (!hasApiKey) {
@@ -248,7 +278,12 @@ Instructions:
 // 3. Multilingual Chat API Endpoint (calls Gemini 3.5 Flash)
 app.post('/api/chat', async (req, res) => {
   try {
-    const { message, history, city, weather, houseType, familySize, vulnerableFactors, language } = req.body;
+    let { message, history, city, weather, houseType, familySize, vulnerableFactors, language } = req.body;
+    message = sanitizeInput(message);
+    city = sanitizeInput(city);
+    houseType = sanitizeInput(houseType);
+    vulnerableFactors = sanitizeInput(vulnerableFactors);
+    language = sanitizeInput(language);
 
     const hasApiKey = process.env.GEMINI_API_KEY_PRIMARY || process.env.GEMINI_API_KEY_SECONDARY || process.env.GEMINI_API_KEY;
     if (!hasApiKey) {
@@ -328,7 +363,9 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Start Server
-app.listen(PORT, () => {
+// Start Server and export listener for test suite close
+const server = app.listen(PORT, () => {
   console.log(`MonsoonShield Server is running at http://localhost:${PORT}`);
 });
+
+module.exports = server;

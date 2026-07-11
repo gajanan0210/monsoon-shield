@@ -5,12 +5,14 @@
   "main": "server.js",
   "scripts": {
     "start": "node --dns-result-order=ipv4first server.js",
-    "dev": "node --watch --dns-result-order=ipv4first server.js"
+    "dev": "node --watch --dns-result-order=ipv4first server.js",
+    "test": "node test_monsoon.js"
   },
   "dependencies": {
     "axios": "^1.18.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
-    "express": "^4.21.2"
+    "express": "^4.21.2",
+    "helmet": "^8.2.0"
   }
 }
